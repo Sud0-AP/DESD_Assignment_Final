@@ -1,0 +1,9 @@
+
+#include<stdio.h>
+
+int main()
+{
+int a = 5, b = 2;
+int c = a ^ b;		//a^b sum of two variables 
+printf("%d", c);
+}
