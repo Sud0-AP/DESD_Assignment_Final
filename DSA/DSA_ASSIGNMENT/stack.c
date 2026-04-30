@@ -17,7 +17,11 @@ int main(){
 	init_array(arr, size);
 
 	while(1){
-		printf("Enter your choice\n(Enter 1) Push element\n(Enter 2) Pop element\n(Enter 3) Display stack\n(Enter 4) Exit\n");
+		printf("Enter your choice\n"
+		"(Enter 1) Push element\n"
+		"(Enter 2) Pop element\n"
+		"(Enter 3) Display stack\n"
+		"(Enter 4) Exit\n");
 		scanf("%d", &choice);
 
 		switch(choice){

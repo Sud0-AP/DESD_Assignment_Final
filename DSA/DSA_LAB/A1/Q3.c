@@ -10,6 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Static array to store column counts for jagged array
+static int jagged_col[100];
+
 struct employee{
 	int emp_id;
 	char emp_name[30];
@@ -26,23 +29,25 @@ void print_employee_data(struct employee *, int);
 
 int main(){
 	int row, col, n, choice;
-	
 	int *arr_1D, **arr_2D_non;
+	struct employee *emp_list;
+	int num_emp;
 	
 	printf("What type of array you wish to create?\n(Enter 1) 1D dynamic array\n(Enter 2) 2D Array with contigous memory allocation\n(Enter 3) 2D Array with non contiguous rows and variable no. of columns \n(Enter 4) Interact with an array of structure and input data then print it \n(Enter 5) Exit\n");
 	scanf("%d", &choice);
 
 	switch(choice){
 		
-		case 1:
+		case 1: {
 			printf("Enter the size for 1D Array: ");
 			scanf("%d", &n);
 			arr_1D = (int *)malloc(sizeof(int) * (n));
 			input_array(&arr_1D, 0, n);
 			print_array(&arr_1D, 0, n);
 			break;
+		}
 
-		case 2:
+		case 2: {
 			printf("Enter the number of rows for 2D contiguous array: ");
 			scanf("%d", &row);
 
@@ -51,11 +56,12 @@ int main(){
 
 			int (*arr_2D_con)[col];
 			arr_2D_con = (int (*)[])malloc(row * sizeof(*arr_2D_con));
-			input_array(arr_2D_con, row, col);
+			input_array((int **)arr_2D_con, row, col);
 
-			print_array(arr_2D_con, row, col);
+			print_array((int **)arr_2D_con, row, col);
 			break;
-		case 3:
+		}
+		case 3: {
 			printf("Enter the numner of rows for the 2D non contigous array with variable columns: ");
 			scanf("%d", &row);
 
@@ -64,9 +70,8 @@ int main(){
 			input_jagged_array(arr_2D_non, row);
 			print_jagged_array(arr_2D_non, row);
 			break;
-		case 4:
-			struct employee *emp_list;
-			int num_emp;
+		}
+		case 4: {
 			printf("Enter number of employees: \n");
 			scanf("%d", &num_emp);
 			emp_list = (struct employee *)malloc(num_emp * (sizeof(struct employee)));
@@ -75,6 +80,7 @@ int main(){
 
 			print_employee_data(emp_list, num_emp);
 			break;
+		}
 		case 5:
 			exit(1);
 			return 0;
@@ -92,14 +98,15 @@ void input_array(int **arr, int row, int col){
 void input_jagged_array(int **arr, int row){
 	int col[row];
 	for(int i=0 ; i<row ; i++){
-		printf("Enter number of elements/columns at row %d", i);
+		printf("Enter number of elements/columns at row %d: ", i);
 		scanf("%d", &col[i]);
+		jagged_col[i] = col[i];  // Store column count in static array
 		arr[i] = malloc(col[i] * sizeof(int));
 	}
 
 	for (int i=0; i<row; i++){
 		for(int j=0; j<col[i]; j++){
-			printf("Enter element at index [%d]x[%d]", i,j);
+			printf("Enter element at index [%d]x[%d]: ", i,j);
 			scanf(" %d", &arr[i][j]);
 		}
 	}
@@ -107,8 +114,14 @@ void input_jagged_array(int **arr, int row){
 
 
 void print_jagged_array(int **arr, int row){
+	for(int i=0 ; i<row ; i++){
+		for(int j=0; j<jagged_col[i]; j++){
+			printf("%d ", arr[i][j]);
+		}
+		printf("\n");
+	}
 }
-void printArray(int **arr, int row, int col){
+void print_array(int **arr, int row, int col){
 	for(int i=0 ; i<row ; i++){
 		for(int j=0; j<col ; j++){
 			printf("%d ", arr[i][j]);

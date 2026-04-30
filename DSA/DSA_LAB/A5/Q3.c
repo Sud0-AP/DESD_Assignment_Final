@@ -1,3 +1,5 @@
+// doubly cicular linked list
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -81,6 +83,11 @@ int main(){
 void insertAtEnd(struct node **head, int data){
 	struct node *temp;
 	temp = (struct node *)malloc(sizeof(struct node));
+	
+	if(temp == NULL){
+		printf("Memory allocation failed !!\n");
+		return;
+	}
 
 	struct node *t1;
 	t1=*head;
@@ -109,6 +116,10 @@ void insertAtEnd(struct node **head, int data){
 void insertAtBeg(struct node **head, int data){
 	struct node *temp, *t1;
 	temp = (struct node *)malloc(sizeof(struct node));
+	if(temp == NULL){
+		printf("Memory allocation failed !!\n");
+		return;
+	}
 	t1=*head;
 
 	temp->prev = NULL;
@@ -166,6 +177,11 @@ void insertAtPos(struct node **head, int data, int pos){
 
 	struct node *temp;
 	temp = (struct node *)malloc(sizeof(struct node));
+	if(temp == NULL){
+		printf("Memory allocation failed !!\n");
+		return;
+	}
+	
 	struct node *t1;
 	t1=*head;
 

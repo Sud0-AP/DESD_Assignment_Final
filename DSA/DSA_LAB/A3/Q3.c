@@ -1,3 +1,4 @@
+//linked list with sorted input
 #include <stdio.h>
 #include <stdlib.h>
 

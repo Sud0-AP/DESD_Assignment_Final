@@ -1,3 +1,6 @@
+//count the duplicates in an array
+
+
 #include <stdio.h>
 
 int count_duplicates(int [], int);

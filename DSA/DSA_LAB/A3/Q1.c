@@ -1,3 +1,4 @@
+//Implement bubble sort, selection sort, insertion sort
 #include <stdio.h>
 #include <stdlib.h>
 

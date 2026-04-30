@@ -1,3 +1,4 @@
+// Singly linked list with student PRN and Name, with delete element by element
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

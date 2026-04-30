@@ -1,3 +1,5 @@
+// singular circular linked list
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,6 +19,8 @@ void deleteFromEnd(struct node **);
 void deleteFromBeg(struct node **);
 void deleteFromPos(struct node **, int);
 
+void reverseList(struct node **);
+
 int main(){
 
 	struct node *head;
@@ -32,7 +36,8 @@ int main(){
 				"(Enter 5) Delete element at start\n"
 				"(Enter 6) Delete element at position\n"
 				"(Enter 7) Display Linked List\n"
-				"(Enter 8) Exit\n");
+				"(Enter 8) Reverse Linked List\n"
+				"(Enter 9) Exit\n");
 
 		scanf("%d", &choice);
 
@@ -71,6 +76,11 @@ int main(){
 				displayList(head);
 				break;
 			case 8:
+				printf("Reversing the linked list...\n");
+				reverseList(&head);
+				printf("List reversed successfully!\n");
+				break;
+			case 9:
 				exit(1);
 				break;
 						
@@ -301,5 +311,24 @@ int listNodeCount(struct node *head){
 		}
 	}
 	return count;
+}
+
+void reverseList(struct node **head){
+	if(*head == NULL || (*head)->next == *head){
+		return;
+	}
+
+	struct node *t1 = NULL;
+	struct node *t2 = *head;
+	struct node *t3 = NULL;
+	
+	do {
+		t3 = t2->next;
+		t2->next = t1;
+		t1 = t2;
+		t2 = t3;
+	} while(t2 != *head);
+	
+	*head = t1;
 }
 

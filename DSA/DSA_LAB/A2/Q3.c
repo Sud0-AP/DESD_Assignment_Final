@@ -1,3 +1,5 @@
+// Find Pth factor of a given number
+
 #include <stdio.h>
 
 int find_factors(int, int);
