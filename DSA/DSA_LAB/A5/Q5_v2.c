@@ -1,3 +1,4 @@
+//PRN: 260240130005 260240130032
 //dequeue or doubly ended queue using array
 
 #include <stdio.h>

@@ -1,5 +1,5 @@
+//PRN: 260240130005 260240130032
 //dequeue or doubly ended queue using linked list
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -75,6 +75,11 @@ void push_rear(struct node **head, int data){
 	struct node *temp;
 	temp = (struct node *)malloc(sizeof(struct node));
 
+	if (temp == NULL){
+		printf("Memory allocation failed!!\n");
+		return;
+	}
+
 	struct node *t1;
 	t1=*head;
 
@@ -95,6 +100,11 @@ void insertAtBeg(struct node **head, int data){
 	struct node *temp;
 	temp = (struct node *)malloc(sizeof(struct node));
 
+	if (temp == NULL){
+		printf("Memory allocation failed!!\n");
+		return;
+	}
+
 	temp->data = data;
 	temp->next = *head;
 
@@ -113,6 +123,12 @@ void insertAtPos(struct node **head, int data, int pos){
 
 	struct node *temp;
 	temp = (struct node *)malloc(sizeof(struct node));
+
+	if (temp == NULL){
+		printf("Memory allocation failed!!\n");
+		return;
+	}
+
 	struct node *t1;
 	t1=*head;
 
