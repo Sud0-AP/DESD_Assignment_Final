@@ -1,3 +1,4 @@
+//PRN: 260240130005 260240130032
 //Merge sort, quick sort, heap sort
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,8 +9,6 @@ void heapSort(int *, int);
 
 void printArray(int *, int);
 void insertArray(int *, int);
-
-
 
 int main(){
 	int size, choice;

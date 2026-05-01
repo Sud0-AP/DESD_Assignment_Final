@@ -1,3 +1,4 @@
+//PRN: 260240130005 260240130032
 //queue using array
 
 #include <stdio.h>
