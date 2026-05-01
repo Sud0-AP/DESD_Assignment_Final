@@ -1,3 +1,4 @@
+//PRN: 260240130005 260240130032
 /* Write a c prog to implement linear search we need to check for duplicate inputs, 
  * if the duplicate elements is allowed then a linear search algo needs to implement accordingly. 
  * An appropiate condition check needs to apply for elements not found scenario.

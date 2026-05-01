@@ -1,5 +1,5 @@
+//PRN: 260240130005 260240130032
 //count the duplicates in an array
-
 
 #include <stdio.h>
 
@@ -29,6 +29,7 @@ void input_array(int arr[], int size){
 	printf("\n");
 }
 
+//counting number of appreances of an element in the array
 int element_in_array(int arr[], int size, int element){
 	int count = 0;
 	for(int i=0; i<size; i++){
@@ -43,7 +44,7 @@ int element_in_array(int arr[], int size, int element){
 int count_duplicates(int arr[], int size){
 	int count=0;
 	for(int i=0; i<size; i++){
-		if(element_in_array(arr, size, arr[i]) > 1){
+		if(element_in_array(arr, size, arr[i]) > 1){ // if an element apprears more than once the increment the counter
 			int temp = element_in_array(arr, i, arr[i]);  
 			if(temp < 1){
 				count++;

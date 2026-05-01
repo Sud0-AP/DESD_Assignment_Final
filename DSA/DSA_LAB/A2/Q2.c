@@ -1,5 +1,5 @@
 /* 
-	PRN numbers -> 260240130005 , 260240130032
+	PRN : 260240130005 , 260240130032
 	
 	Write a C/C++ program to implement Binary Search. We need to check for
 	duplicate element inputs, if found any should not insert into the input
@@ -14,7 +14,7 @@
 	(a) Binary Search ( iterative approach)
 	(b) Binary Search ( recursion approach ) 
 */
-#include<stdio.h>
+#include <stdio.h>
 
 #define MAX_SIZE 100
 
