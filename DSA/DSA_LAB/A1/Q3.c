@@ -1,3 +1,4 @@
+//PRN: 260240130005 260240130032
 /* Write a C prog which allocate and deallocate memory dynamically 
  * (a) Allocating 1D array dynamically and access the elements
  * (b) Allocating 2D array dynamically

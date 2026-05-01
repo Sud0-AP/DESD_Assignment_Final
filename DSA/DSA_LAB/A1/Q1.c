@@ -181,13 +181,13 @@ void insert(int arr[],int size, int value, int index){
 		scanf(" %c", &choice);
 		if(choice == 'y'|| choice == 'Y'){
 			for(int i = index; i<size ; i++){
-				if(arr[i] == -99){
+				if(arr[i] == -99){ //finding next empty slot
 					arr[i] = value;
 					printf("Value at index %d set to %d\n", i, value);
 					break;
-				}else if((i == size-1) && (arr[i] != -99)){
+				}else if((i == size-1) && (arr[i] != -99)){ // checking if the last element is also not free 
 					printf("Going to the start of the array\n");
-					for(int j = 0; j<index ; j++){
+					for(int j = 0; j<index ; j++){ //finding next empty slot from the start
 						if(arr[j] == -99){
 							arr[j] = value;
 							printf("Value at index %d set to %d\n", j, value);

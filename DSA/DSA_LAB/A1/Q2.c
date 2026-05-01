@@ -1,3 +1,4 @@
+//PRN: 260240130005 260240130005 260240130032
 //Create an employee structure with the following members empid, employee name, salary, year of joining.
 //Accept the data for certain no. of employees and find their total average, max , min salary.
 //also find out the employees with maximum, minimum service, use a function to find service for each employee element in the array.
