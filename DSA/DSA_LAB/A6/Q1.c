@@ -1,5 +1,5 @@
 /* 
-	PRN - 260240130005 , 260240130032;     
+	PRN - 260240130005 260240130032
 
 	Create an Employee Database menu driven program having info (name, age, id, addresss, date of
 	joining, id proof)
