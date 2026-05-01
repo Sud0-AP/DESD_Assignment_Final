@@ -1,3 +1,4 @@
+//PRN: 260240130005 260240130032
 //singly linked list
 
 #include <stdio.h>
@@ -159,6 +160,11 @@ void insertAtEnd(int data){
 	struct node *temp;
 	temp = (struct node *)malloc(sizeof(struct node));
 
+	if (temp == NULL){
+		printf("Memory allocation failed!!\n");
+		return;
+	}
+
 	struct node *t1;
 	t1=head;
 
@@ -179,6 +185,11 @@ void insertAtBeg(int data){
 	struct node *temp;
 	temp = (struct node *)malloc(sizeof(struct node));
 
+	if (temp == NULL){
+		printf("Memory allocation failed!!\n");
+		return;
+	}
+
 	temp->data = data;
 	temp->next = head;
 
@@ -197,6 +208,12 @@ void insertAtPos(int data, int pos){
 
 	struct node *temp;
 	temp = (struct node *)malloc(sizeof(struct node));
+
+	if (temp == NULL){
+		printf("Memory allocation failed!!\n");
+		return;
+	}
+
 	struct node *t1;
 	t1=head;
 

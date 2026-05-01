@@ -1,4 +1,6 @@
+//PRN: 260240130005 260240130032
 // Singly linked list with student PRN and Name, with delete element by element
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -172,6 +174,11 @@ void insertAtEnd(char *name, int data){
 	struct studentInfo *temp;
 	temp = (struct studentInfo *)malloc(sizeof(struct studentInfo));
 
+	if (temp == NULL){
+		printf("Memory allocation failed!!\n");
+		return;
+	}
+
 	struct studentInfo *t1;
 	t1=head;
 	
@@ -193,6 +200,11 @@ void insertAtBeg(char *name, int data){
 	struct studentInfo *temp;
 	temp = (struct studentInfo *)malloc(sizeof(struct studentInfo));
 
+	if (temp == NULL){
+		printf("Memory allocation failed!!\n");
+		return;
+	}
+
 	strcpy(temp->studentName, name);
 	temp->studentPRN = data;
 	temp->next = head;
@@ -212,6 +224,12 @@ void insertAtPos(char *name, int data, int pos){
 
 	struct studentInfo *temp;
 	temp = (struct studentInfo *)malloc(sizeof(struct studentInfo));
+
+	if (temp == NULL){
+		printf("Memory allocation failed!!\n");
+		return;
+	}
+
 	struct studentInfo *t1;
 	t1=head;
 
