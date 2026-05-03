@@ -1,0 +1,18 @@
+# Setup script (only needed for initial setup)
+setup.sh
+
+# Object files (if using object file compilation)
+*.o
+*.obj
+
+# Build artifacts
+*.a
+*.so
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
