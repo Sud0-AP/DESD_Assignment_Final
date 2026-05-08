@@ -1,0 +1,5 @@
+This is a test file for the word count program.
+It contains multiple lines of text.
+Each line has different number of words.
+This program counts lines, words, and characters.
+Let's see if the pipe communication works correctly.

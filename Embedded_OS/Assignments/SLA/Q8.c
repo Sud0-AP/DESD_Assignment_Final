@@ -31,22 +31,23 @@ void *thread_B(void *arg) {
 	pthread_exit(NULL);
 }
 
-int main()
-{
-	int main_st = 10;
+int main(){
+
+	char buffer;
 	int ret, arg[2], ret_1 = 1;
 	pthread_t thread1, thread2;
+
 	ret = sem_init(&sem_a, 0, 0);
 	if(ret != 0) {
 		perror("sem_a create error");
 	}
+	
 	ret = sem_init(&sem_b, 0, 1);
 	if(ret != 0) {
 		perror("sem_b create error");
 	}
 
-
-	fd = open("tmp.txt", O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
+	fd = open("AABB_blah.txt", O_CREAT | O_WRONLY | O_TRUNC, S_IRUSR | S_IWUSR);
        	if(fd == -1) {
 		perror("open failed");
 		return 0;
@@ -80,11 +81,12 @@ int main()
 	}
 	printf("thread B exited, main continues\n");
 
-	char buffer;
 	while(ret_1 != 0){
 		ret_1 = read(fd, &buffer, 1);
 		write(1, &buffer, 1);
 	}
+
+	close(fd);
 
 	return 0;
 }
