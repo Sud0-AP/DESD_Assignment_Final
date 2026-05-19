@@ -1,4 +1,4 @@
-//Create 2 pthreads both file writing to single file. thread1 writes "AAAA" and thread2 writes "BBBBB" in loop (for loop) 10 times. after writing both threads exit and main reads the file and prints the contents on STDOUT / terminal. Expected output should show pattern "AAAAABBBBBAAAAAABBBBB..."
+// Create 2 pthreads both file writing to single file. thread1 writes "AAAA" and thread2 writes "BBBBB" in loop (for loop) 10 times. after writing both threads exit and main reads the file and prints the contents on STDOUT / terminal. Expected output should show pattern "AAAAA" 10 times then "BBBBB" 10 times.
 
 #include <stdio.h>
 #include <unistd.h>
@@ -13,20 +13,20 @@ int fd;
 sem_t sem_a, sem_b;
 
 void *thread_A(void *arg) {
+	sem_wait(&sem_b);
 	for (int i = 0; i < 10; i++) {
-		sem_wait(&sem_b);
-		write(fd, "AAAA", 4);
-		sem_post(&sem_a);
+		write(fd, "AAAAA", 5);
 	}
+	sem_post(&sem_a);
 	pthread_exit(NULL);
 }
 
 void *thread_B(void *arg) {
+	sem_wait(&sem_a);
 	for(int i = 0; i < 10; i++) {
-		sem_wait(&sem_a);
 		write(fd, "BBBBB", 5);
-		sem_post(&sem_b);
 	}
+	sem_post(&sem_b);
 	pthread_exit(NULL);
 }
 
@@ -46,7 +46,7 @@ int main(){
 		perror("semaphore B create error");
 	}
 
-	fd = open("AABB_blah.txt", O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
+	fd = open("AABBx10_blah.txt", O_CREAT | O_RDWR | O_TRUNC, S_IRUSR | S_IWUSR);
        
 	if(fd == -1) {
 		perror("open failed");
