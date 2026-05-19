@@ -1,0 +1,1 @@
+cmd_/home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/Module.symvers := sed 's/\.ko$$/\.o/' /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/modules.order | scripts/mod/modpost -m -a  -o /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/Module.symvers -e -i Module.symvers   -T -

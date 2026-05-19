@@ -1,0 +1,1 @@
+cmd_/home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/hello_world.ko := ld -r  -m elf_x86_64 -z noexecstack   --build-id=sha1  -T scripts/module.lds -o /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/hello_world.ko /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/hello_world.o /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/hello_world.mod.o;  true

@@ -1,0 +1,1 @@
+cmd_/home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/hello_world.mod := { echo  /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/hello_world.o;  echo; } > /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/hello_world.mod
