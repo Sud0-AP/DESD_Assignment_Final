@@ -1,0 +1,1 @@
+cmd_/home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/read_write_ioctl/read_write_ioctl.mod := { echo  /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/read_write_ioctl/read_write_ioctl.o;  echo; } > /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/read_write_ioctl/read_write_ioctl.mod

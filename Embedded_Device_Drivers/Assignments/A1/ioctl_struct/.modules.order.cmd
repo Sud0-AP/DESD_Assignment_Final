@@ -1,0 +1,1 @@
+cmd_/home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/read_write_ioctl/modules.order := {   echo /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/read_write_ioctl/read_write_ioctl.ko; :; } | awk '!x[$$0]++' - > /home/desd/DESD_Assignments/Embedded_Device_Drivers/LAB/read_write_ioctl/modules.order
