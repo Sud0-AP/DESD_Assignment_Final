@@ -18,14 +18,14 @@ static dev_t dev_number;
 static struct cdev char_dev;
 static int device_value;
 
-static struct to_be_sent{
-	int value = 10;
-	char str[] = "This was inside a struct in Kernel!!";
-};
+typedef struct {
+	int value;
+}to_be_sent;
+
+static to_be_sent struct_comm = {10};
 
 static long my_ioctl(struct file *file, unsigned int cmd, unsigned long arg){
 	int value;
-	struct to_be_sent send_val;
 	pr_info("ioctl_char: ioctl called\n");
 	switch(cmd){
 		case MY_IOCTL_RESET:
@@ -41,8 +41,7 @@ static long my_ioctl(struct file *file, unsigned int cmd, unsigned long arg){
 			pr_info("ioctl_char: device_value set to %d\n", device_value);
 			break;
 		case MY_IOCTL_GET_VALUE:
-			//value = device_value;
-			if(copy_to_user((int __user*)arg, &send_val, sizeof(send_val))){
+			if(copy_to_user((to_be_sent __user*)arg, &struct_comm, sizeof(struct_comm))){
 				pr_err("ioctl_char: device_value sent to user\n");
 				return -EFAULT;
 			}
