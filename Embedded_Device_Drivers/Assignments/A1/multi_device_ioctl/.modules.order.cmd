@@ -1,0 +1,1 @@
+cmd_/home/desd/DESD_Assignments/Embedded_Device_Drivers/Assignments/A1/multi_device_ioctl/modules.order := {   echo /home/desd/DESD_Assignments/Embedded_Device_Drivers/Assignments/A1/multi_device_ioctl/multi_char.ko; :; } | awk '!x[$$0]++' - > /home/desd/DESD_Assignments/Embedded_Device_Drivers/Assignments/A1/multi_device_ioctl/modules.order

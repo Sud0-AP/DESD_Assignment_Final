@@ -1,0 +1,1 @@
+cmd_/home/desd/DESD_Assignments/Embedded_Device_Drivers/Assignments/A1/multi_device_ioctl/multi_char.mod := { echo  /home/desd/DESD_Assignments/Embedded_Device_Drivers/Assignments/A1/multi_device_ioctl/multi_char.o;  echo; } > /home/desd/DESD_Assignments/Embedded_Device_Drivers/Assignments/A1/multi_device_ioctl/multi_char.mod
