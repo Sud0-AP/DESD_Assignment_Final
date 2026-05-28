@@ -26,6 +26,9 @@ struct multi_char_dev{
 	size_t data_size; //Number of valid bytes currently stored in this device buffer
 	struct mutex lock; // mutex lock
 	int minor; // minor number of this device
+	//Assignment functionality variables
+	int read_enable;
+	to_be_shared kernel_struct;
 };
 
 static dev_t base_dev; //stores first allocated device number. This also contains both major and minor number
@@ -35,9 +38,8 @@ static struct multi_char_dev *devices;//pointer to dynamically allocated array o
 
 //---------------------------------Ioctl---------------------------------
 
-static int read_enable = 0;
-
-static to_be_shared kernel_struct;
+//static int read_enable = 0;
+//static to_be_shared kernel_struct;
 
 
 static long multi_char_ioctl(struct file *file, unsigned int cmd, unsigned long arg){
@@ -48,33 +50,37 @@ static long multi_char_ioctl(struct file *file, unsigned int cmd, unsigned long 
 	pr_info("multi_char: ioctl called\n");
 	switch(cmd){
 		case MY_IOCTL_ENABLE_READ:
-			read_enable = 1;
+			dev->read_enable = 1;
 			pr_info("multi_char: Read functionality enabled!!\n");
 			break;
 		case MY_IOCTL_DISABLE_READ:
-			read_enable = 0;
+			dev->read_enable = 0;
 			pr_info("multi_char: Read functionality disabled!!\n");
 			break;
 
 		case MY_IOCTL_SET_VALUE:
 			if(copy_from_user(&temp, (to_be_shared __user *) arg, sizeof(to_be_shared))){
 				pr_err("ioctl_char : user_struct receiving from user\n");
+				mutex_unlock(&dev->lock);
 				return -EFAULT;
 			}
-			kernel_struct = temp;
+			dev->kernel_struct = temp;
 			pr_info("ioctl_char: kernel_struct set to user_struct \n");
 			break;
 		case MY_IOCTL_GET_VALUE:
-			if(copy_to_user((to_be_shared __user*)arg, &kernel_struct, sizeof(kernel_struct))){
+			if(copy_to_user((to_be_shared __user*)arg, &dev->kernel_struct, sizeof(dev->kernel_struct))){
 				pr_err("ioctl_char: kernel_struct sending to user\n");
+				mutex_unlock(&dev->lock);
 				return -EFAULT;
 			}
 			break;
 		default:
 			pr_err("ioctl_char: invalid ioctl command\n");
+			mutex_unlock(&dev->lock);
 			return -EINVAL;
 	}
 
+	mutex_unlock(&dev->lock);
 	return 0;
 }
 
@@ -116,7 +122,7 @@ static ssize_t multi_char_read(struct file *file, char __user *user_buffer, size
 	size_t available;
 	mutex_lock(&dev->lock);
 
-	if(read_enable == 0){
+	if(dev->read_enable == 0){
 		pr_info("Read functionality not enabled!! use IOCTL -> MY_IOCTL_ENABLE_READ to use Read!!\n");
 		mutex_unlock(&dev->lock);
 		return 0;
@@ -213,6 +219,7 @@ static loff_t multi_char_lseek(struct file *file, loff_t offset, int whence){
 	}
 
 	file->f_pos = new_pos;
+
 	mutex_unlock(&dev->lock);
 	return new_pos;
 }
@@ -232,9 +239,9 @@ static int __init multi_char_init(void){
 	dev_t dev_num;
 	pr_info("multi_char: module init\n");
 
-	kernel_struct.int_value = 10;
-	strcpy(kernel_struct.char_value , "Hello this string is sent via IOCTL Inside a struct defined in kernel space\0");
-	kernel_struct.float_value = 66.66;
+	//kernel_struct.int_value = 10;
+	//strscpy(kernel_struct.char_value , "Hello this string is sent via IOCTL Inside a struct defined in kernel space", sizeof(kernel_struct.char_value));
+	//kernel_struct.float_value = 66.66;
 
 	ret = alloc_chrdev_region(&base_dev, 0, DEVICE_COUNT, DEVICE_NAME);
 	if(ret < 0){
@@ -269,6 +276,11 @@ static int __init multi_char_init(void){
 		devices[i].data_size = 0;			     //Initially no valid data present in the buffer
 		mutex_init(&devices[i].lock);			     //Initialize mutex lock for this device
 		
+		devices[i].read_enable = 0;
+		devices[i].kernel_struct.int_value = 10;
+		strscpy(devices[i].kernel_struct.char_value, "Hello via IOCTL from kernel Side!!", sizeof(devices[i].kernel_struct.char_value));
+		devices[i].kernel_struct.float_value = 66.66;
+
 		cdev_init(&devices[i].cdev, &multi_char_fops);
 		devices[i].cdev.owner = THIS_MODULE;
 
