@@ -1,0 +1,62 @@
+#include <linux/init.h> 
+#include <linux/module.h>
+#include <linux/fs.h> 
+#include <linux/cdev.h> 
+#include <linux/kernel.h>
+#include <linux/jiffies.h> // provides jiffies, HZ, msecs_to_jiffies, usec_to_jiffies
+#include <linux/device.h>
+#include <linux/uaccess.h>
+#include <linux/timer.h> // struct timer_list and kernel timer APIs
+#include <linux/atomic.h> //provides atomic operation
+#include <linux/string.h>
+#include <linux/minmax.h> // provides MIN and MAX macros
+#include <linux/compiler.h> //provides READ_ONCE and WRITE_ONCE
+
+#define DRIVER_NAME "timer_lab"
+#define DEVICE_NAME "timer_lab"
+#define CLASS_NAME "timer_lab_class"
+#define CMD_BUF 64 //maximum command size accepted from user
+
+#define TIMER_STOPPED 0
+#define TIMER_PERIODIC 1
+#define TIMER_ONESHOT 2
+
+static dev_t dev_num;
+static struct cdev timer_cdev;
+static struct class *timer_class;
+static struct device *timer_device;
+static struct timer_list lab_timer; // low res timer object
+
+static atomic_t tick_count = ATOMIC_INIT(0); // counts how many times the timer callback is executed
+static atomic_t timer_mode = ATOMIC_INIT(TIMER_STOPPED); // store current timer node stopped, periodic or one-shot
+
+static unsigned int period_ms = 1000; //timer period in mili seconds
+
+static unsigned long last_tick_jiffies; //stores jiffies value when timer callback is executed
+static unsigned long next_expiry_jiffies; //stores next programmed expiry time in jiffies
+
+static const char * mode_to_string(int mode){ //converts timer mode integer to readable string
+	switch(mode){
+		case TIMER_STOPPED:
+			return "stopped";
+		case TIMER_PERIODIC:
+			return "periodic";
+		case TIMER_ONESHOT:
+			return "one_shot";
+		default:
+			return "unknown";
+	}
+}
+
+static unsigned long make_entry_from_ms(unsigned int ms){ //convert mili seconds into absolute future jiffies expiry value
+	unsigned long delay_jiffies;
+	delay_jiffies = msec_to_jiffies(ms);
+
+	if(delay_jiffies == 0){ //saftey check for very small value, this forces atleast 1 jiffies dealy
+		delay_jiffies = 1;
+	}
+
+	return (jiffies + delay_jiffies);
+}
+
+

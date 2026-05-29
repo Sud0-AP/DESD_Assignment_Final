@@ -12,7 +12,7 @@
 #include <linux/mutex.h>
 //Include kernel version macros such as LINUX_VERSION_CODE and KERNEL_VERSION()
 #include <linux/version.h>
-
+#include "ioctl_cmd.h"
 //define the base class while allocating character device number
 #define DEVICE_NAME "multi_char"
 #define CLASS_NAME "multi_char_class"
@@ -26,11 +26,64 @@ struct multi_char_dev{
 	size_t data_size; //Number of valid bytes currently stored in this device buffer
 	struct mutex lock; // mutex lock
 	int minor; // minor number of this device
+	//Assignment functionality variables
+	int read_enable;
+	to_be_shared kernel_struct;
 };
 
 static dev_t base_dev; //stores first allocated device number. This also contains both major and minor number
 static struct class *multi_char_class; //pointer to device class used for automatic /dev node creation.
 static struct multi_char_dev *devices;//pointer to dynamically allocated array of device structure
+
+
+//---------------------------------Ioctl---------------------------------
+
+//static int read_enable = 0;
+//static to_be_shared kernel_struct;
+
+
+static long multi_char_ioctl(struct file *file, unsigned int cmd, unsigned long arg){
+	struct multi_char_dev *dev = file->private_data;
+	to_be_shared temp;
+	mutex_lock(&dev->lock);
+
+	pr_info("multi_char: ioctl called\n");
+	switch(cmd){
+		case MY_IOCTL_ENABLE_READ:
+			dev->read_enable = 1;
+			pr_info("multi_char: Read functionality enabled!!\n");
+			break;
+		case MY_IOCTL_DISABLE_READ:
+			dev->read_enable = 0;
+			pr_info("multi_char: Read functionality disabled!!\n");
+			break;
+
+		case MY_IOCTL_SET_VALUE:
+			if(copy_from_user(&temp, (to_be_shared __user *) arg, sizeof(to_be_shared))){
+				pr_err("ioctl_char : user_struct receiving from user\n");
+				mutex_unlock(&dev->lock);
+				return -EFAULT;
+			}
+			dev->kernel_struct = temp;
+			pr_info("ioctl_char: kernel_struct set to user_struct \n");
+			break;
+		case MY_IOCTL_GET_VALUE:
+			if(copy_to_user((to_be_shared __user*)arg, &dev->kernel_struct, sizeof(dev->kernel_struct))){
+				pr_err("ioctl_char: kernel_struct sending to user\n");
+				mutex_unlock(&dev->lock);
+				return -EFAULT;
+			}
+			break;
+		default:
+			pr_err("ioctl_char: invalid ioctl command\n");
+			mutex_unlock(&dev->lock);
+			return -EINVAL;
+	}
+
+	mutex_unlock(&dev->lock);
+	return 0;
+}
+
 
 
 //---------------------------------Open---------------------------------
@@ -61,11 +114,19 @@ static int multi_char_release(struct inode *inode, struct file *file){
 
 //---------------------------------Read---------------------------------
 static ssize_t multi_char_read(struct file *file, char __user *user_buffer, size_t count, loff_t *offset){
+
+
 	struct multi_char_dev *dev = file->private_data; //get device pointer from file->private_data 
 							 //this tells us which minor device is being used
 	ssize_t bytes_to_read, ret;
 	size_t available;
 	mutex_lock(&dev->lock);
+
+	if(dev->read_enable == 0){
+		pr_info("Read functionality not enabled!! use IOCTL -> MY_IOCTL_ENABLE_READ to use Read!!\n");
+		mutex_unlock(&dev->lock);
+		return 0;
+	}
 
 	if(*offset >= dev->data_size){
 		pr_info("inside err 1 offset: %lld, data_size %ld\n",*offset, dev->data_size);
@@ -158,6 +219,7 @@ static loff_t multi_char_lseek(struct file *file, loff_t offset, int whence){
 	}
 
 	file->f_pos = new_pos;
+
 	mutex_unlock(&dev->lock);
 	return new_pos;
 }
@@ -168,13 +230,18 @@ static const struct file_operations multi_char_fops = {
 	.release = multi_char_release,
 	.read = multi_char_read,
 	.write = multi_char_write,
-	.llseek = multi_char_lseek
+	.llseek = multi_char_lseek,
+	.unlocked_ioctl = multi_char_ioctl
 };
 
 static int __init multi_char_init(void){
 	int ret, i;
 	dev_t dev_num;
 	pr_info("multi_char: module init\n");
+
+	//kernel_struct.int_value = 10;
+	//strscpy(kernel_struct.char_value , "Hello this string is sent via IOCTL Inside a struct defined in kernel space", sizeof(kernel_struct.char_value));
+	//kernel_struct.float_value = 66.66;
 
 	ret = alloc_chrdev_region(&base_dev, 0, DEVICE_COUNT, DEVICE_NAME);
 	if(ret < 0){
@@ -209,6 +276,11 @@ static int __init multi_char_init(void){
 		devices[i].data_size = 0;			     //Initially no valid data present in the buffer
 		mutex_init(&devices[i].lock);			     //Initialize mutex lock for this device
 		
+		devices[i].read_enable = 0;
+		devices[i].kernel_struct.int_value = 10;
+		strscpy(devices[i].kernel_struct.char_value, "Hello via IOCTL from kernel Side!!", sizeof(devices[i].kernel_struct.char_value));
+		devices[i].kernel_struct.float_value = 66.66;
+
 		cdev_init(&devices[i].cdev, &multi_char_fops);
 		devices[i].cdev.owner = THIS_MODULE;
 
@@ -246,7 +318,6 @@ static void __exit multi_char_exit(void){
 	int i;
 	dev_t dev_num;
 	pr_info("multi_char: module exit\n");
-
 	for(i = 0; i<DEVICE_COUNT; ++i){
 		dev_num = MKDEV(MAJOR(base_dev), MINOR(base_dev)+i);
 		device_destroy(multi_char_class, dev_num);

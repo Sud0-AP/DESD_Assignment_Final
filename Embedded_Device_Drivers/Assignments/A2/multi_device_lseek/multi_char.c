@@ -246,7 +246,6 @@ static void __exit multi_char_exit(void){
 	int i;
 	dev_t dev_num;
 	pr_info("multi_char: module exit\n");
-
 	for(i = 0; i<DEVICE_COUNT; ++i){
 		dev_num = MKDEV(MAJOR(base_dev), MINOR(base_dev)+i);
 		device_destroy(multi_char_class, dev_num);

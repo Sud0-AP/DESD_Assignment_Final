@@ -3,29 +3,27 @@
 #include <linux/init.h>
 #include <linux/fs.h>
 #include <linux/cdev.h>
-//Include device model APIs such as class_creat() and device_creat()
 #include <linux/device.h>
-//Include User kernel copy functions copy_to_user() and copy_from_user()
 #include <linux/uaccess.h>
-//Include kernel memory allocation functions such as kcalloc() and kfree()
 #include <linux/slab.h>
 #include <linux/mutex.h>
-//Include kernel version macros such as LINUX_VERSION_CODE and KERNEL_VERSION()
 #include <linux/version.h>
+#include <linux/sched.h>
+#include <linux/wait.h>
 
-//define the base class while allocating character device number
-#define DEVICE_NAME "multi_char"
-#define CLASS_NAME "multi_char_class"
+#define DEVICE_NAME "multi_char_wq"
+#define CLASS_NAME "multi_char_wq_class"
 #define DEVICE_COUNT 4
 #define BUFFER_SIZE 1024
 
-//Define a structure that represents once character device instance
 struct multi_char_dev{
 	struct cdev cdev; //character device registered with VFS layer
 	char buffer[BUFFER_SIZE]; //private kernel buffer for this particular device
 	size_t data_size; //Number of valid bytes currently stored in this device buffer
 	struct mutex lock; // mutex lock
 	int minor; // minor number of this device
+	int data_available;
+	wait_queue_head_t wq;
 };
 
 static dev_t base_dev; //stores first allocated device number. This also contains both major and minor number
@@ -67,6 +65,16 @@ static ssize_t multi_char_read(struct file *file, char __user *user_buffer, size
 	size_t available;
 	mutex_lock(&dev->lock);
 
+	while(dev->data_available == 0){
+		mutex_unlock(&dev->lock);
+
+		if(wait_event_interruptible(dev->wq, dev->data_available) != 0){
+			pr_info("read interrupted by signal\n");
+			return -1;
+		}
+		mutex_lock(&dev->lock);
+	}
+
 	if(*offset >= dev->data_size){
 		pr_info("inside err 1 offset: %lld, data_size %ld\n",*offset, dev->data_size);
 		ret = 0;
@@ -88,6 +96,8 @@ static ssize_t multi_char_read(struct file *file, char __user *user_buffer, size
 	*offset += bytes_to_read;
 	ret = bytes_to_read;
 	pr_info("multi_char: Sent %zu bytes to user, using minor %d\n", bytes_to_read, dev->minor);
+
+	dev->data_available = 0;
 
 	mutex_unlock(&dev->lock);
 	return ret;
@@ -123,9 +133,14 @@ static ssize_t multi_char_write(struct file *file, const char __user *user_buffe
 	if(*offset < BUFFER_SIZE){
 		dev->buffer[*offset] = '\0';
 	}
-	pr_info("multi_char: written %zu bytes to minor %d\n", bytes_to_write, dev->minor);
 	
+	pr_info("multi_char: written %zu bytes to minor %d\n", bytes_to_write, dev->minor);
+
+	dev->data_available = 1;
+
 	mutex_unlock(&dev->lock);
+	
+	wake_up_interruptible(&dev->wq);
 	return ret;
 }
 
@@ -209,6 +224,10 @@ static int __init multi_char_init(void){
 		devices[i].data_size = 0;			     //Initially no valid data present in the buffer
 		mutex_init(&devices[i].lock);			     //Initialize mutex lock for this device
 		
+		//initializing wait queue variables
+		devices[i].data_available = 0;
+		init_waitqueue_head(&devices[i].wq);
+
 		cdev_init(&devices[i].cdev, &multi_char_fops);
 		devices[i].cdev.owner = THIS_MODULE;
 
@@ -264,11 +283,6 @@ module_exit(multi_char_exit);
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Ayan Rahul");
-MODULE_DESCRIPTION("Multiple character devices using one driver and multiple minor number\n");
+MODULE_DESCRIPTION("Wait queue on multiple character devices\n");
 MODULE_VERSION("1.0");
-
-
-
-
-
 
