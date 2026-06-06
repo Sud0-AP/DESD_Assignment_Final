@@ -1,0 +1,94 @@
+#include <linux/init.h>
+#include <linux/module.h>
+#include <linux/mod_devicetable.h>
+#include <linux/platform_device.h>
+#include <linux/property.h>
+
+static const struct of_device_id my_dev_ids[]={
+	{.compatible = "brightlight,mydev"},
+	{},
+};
+
+MODULE_DEVICE_TABLE(of, my_dev_ids);
+
+static int my_dev_probe(struct platform_device *pdev){
+
+	pr_info("my_dev: Probe function is called\n");
+	int status;
+	const char *string_var;
+	u32 int_var;
+
+	struct device *dev = &pdev->dev;
+
+	if(!device_property_present(dev, "int_var")){
+
+		pr_err("my_dev: Init var property is not present\n");
+		return -1;
+	}
+
+	if(!device_property_present(dev, "string_var")){
+
+		pr_err("my_dev: String var property is not present\n");
+		return -1;
+	}
+
+	status = device_property_read_u32(dev, "int_var", &int_var);
+
+	if(status){
+
+		pr_err("my_dev: Error reading int var property\n");
+		return status;
+	}
+
+	pr_info("Deivce int_var = %d\n", int_var);
+
+	status = device_property_read_string(dev, "string_var", &string_var);
+
+	if(status){
+
+		pr_err("my_dev: Error reading string_var property\n");
+		return status;
+	}
+
+	pr_info("Device string_var = %s\n", string_var);
+	return 0;
+}
+
+static int my_dev_remove(struct platform_device *pdev){
+
+	pr_info("my_dev: Remove function is called\n");
+	return 0;
+}
+
+static struct platform_driver my_dev_driver = {
+	.probe = my_dev_probe,
+	.remove = my_dev_remove,
+	.driver = {
+		.name = "my_dev_driver",
+		.of_match_table = my_dev_ids,
+	}
+};
+
+#if 1
+static int __init my_init(void){
+	
+	printk("my_dev: Init function is called\n");
+	return platform_driver_register(&my_dev_driver);
+}
+
+static void __exit my_exit(void){
+	
+	printk("my_dev: Exit function is called\n");
+	platform_driver_unregister(&my_dev_driver);
+}
+
+module_init(my_init);
+module_exit(my_exit);
+
+#else
+module_platform_driver(my_dev_driver);
+#endif
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Ayan Rahul");
+MODULE_DESCRIPTION("Frist driver code");

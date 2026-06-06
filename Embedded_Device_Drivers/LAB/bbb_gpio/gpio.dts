@@ -1,0 +1,30 @@
+/dts-v1/;
+/plugin/;
+/ {
+	compatible = "ti,beaglebone", "ti,beaglebone-black", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx";
+    	fragment@0 {
+        	target = <&am33xx_pinmux>;
+        	__overlay__ {
+            		bbb_ext_led_pins: pinmux_bbb_ext_led_pins {
+				pinctrl-single,pins= <
+					0x078 0x07
+				>;
+        	    	};
+        	};
+    	};
+    	fragment@1 {
+        	target-path = "/";
+        	__overlay__ {
+            		my_gpio_led {
+                		compatible = "sud0,GPIO";
+                		status = "okay";
+                		
+				pinctrl-names = "default";
+                		pinctrl-0 = <&bbb_ext_led_pins>;
+
+				led-gpios = <&gpio1 28 0>;
+				blink-period-ms = <500>;
+        	    	};
+        	};
+    	};
+};
