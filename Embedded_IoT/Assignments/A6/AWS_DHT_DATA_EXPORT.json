@@ -1,0 +1,126 @@
+{
+  "topicFilter": "parantha/paneer",
+  "qos": 0,
+  "messages": [
+    {
+      "format": "json",
+      "topic": "parantha/paneer",
+      "timestamp": 1781329146232,
+      "payload": {
+        "device_id": "ESP32_DHT22",
+        "timestamp": "172580",
+        "temperature": 29.70,
+        "humidity": 99.90
+      },
+      "qos": 0
+    },
+    {
+      "format": "json",
+      "topic": "parantha/paneer",
+      "timestamp": 1781329141245,
+      "payload": {
+        "device_id": "ESP32_DHT22",
+        "timestamp": "167573",
+        "temperature": 30.20,
+        "humidity": 99.90
+      },
+      "qos": 0
+    },
+    {
+      "format": "json",
+      "topic": "parantha/paneer",
+      "timestamp": 1781329136197,
+      "payload": {
+        "device_id": "ESP32_DHT22",
+        "timestamp": "162566",
+        "temperature": 30.40,
+        "humidity": 99.90
+      },
+      "qos": 0
+    },
+    {
+      "format": "json",
+      "topic": "parantha/paneer",
+      "timestamp": 1781329131282,
+      "payload": {
+        "device_id": "ESP32_DHT22",
+        "timestamp": "157558",
+        "temperature": 30.30,
+        "humidity": 99.90
+      },
+      "qos": 0
+    },
+    {
+      "format": "json",
+      "topic": "parantha/paneer",
+      "timestamp": 1781329126161,
+      "payload": {
+        "device_id": "ESP32_DHT22",
+        "timestamp": "152551",
+        "temperature": 30.50,
+        "humidity": 99.90
+      },
+      "qos": 0
+    },
+    {
+      "format": "json",
+      "topic": "parantha/paneer",
+      "timestamp": 1781329121246,
+      "payload": {
+        "device_id": "ESP32_DHT22",
+        "timestamp": "147544",
+        "temperature": 31.10,
+        "humidity": 99.90
+      },
+      "qos": 0
+    },
+    {
+      "format": "json",
+      "topic": "parantha/paneer",
+      "timestamp": 1781329116331,
+      "payload": {
+        "device_id": "ESP32_DHT22",
+        "timestamp": "142537",
+        "temperature": 32.70,
+        "humidity": 99.90
+      },
+      "qos": 0
+    },
+    {
+      "format": "json",
+      "topic": "parantha/paneer",
+      "timestamp": 1781329111319,
+      "payload": {
+        "device_id": "ESP32_DHT22",
+        "timestamp": "137529",
+        "temperature": 32.80,
+        "humidity": 99.90
+      },
+      "qos": 0
+    },
+    {
+      "format": "json",
+      "topic": "parantha/paneer",
+      "timestamp": 1781329106092,
+      "payload": {
+        "device_id": "ESP32_DHT22",
+        "timestamp": "132522",
+        "temperature": 30.20,
+        "humidity": 99.90
+      },
+      "qos": 0
+    },
+    {
+      "format": "json",
+      "topic": "parantha/paneer",
+      "timestamp": 1781329101180,
+      "payload": {
+        "device_id": "ESP32_DHT22",
+        "timestamp": "127515",
+        "temperature": 27.80,
+        "humidity": 99.90
+      },
+      "qos": 0
+    }
+  ]
+}
