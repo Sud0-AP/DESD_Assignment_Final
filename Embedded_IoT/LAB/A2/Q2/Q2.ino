@@ -28,9 +28,7 @@ class MyCallbacks : public BLECharacteristicCallbacks {
           digitalWrite(LED_PIN, LOW);
           delay(200);
         }
-
       }
-
       Serial.println();
       Serial.println("*********");
     }
