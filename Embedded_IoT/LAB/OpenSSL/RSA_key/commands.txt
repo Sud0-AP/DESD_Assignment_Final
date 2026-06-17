@@ -1,0 +1,14 @@
+ 2001  openssl version
+ 2002  clear
+ 2003  mkdir openssl_test
+ 2004  cd openssl_test/
+ 2005  openssl genrsa -out private.key 2048
+ 2006  ls
+ 2007  cat private.key 
+ 2008  openssl rsa -in private.key -text -noout
+ 2009  openssl rsa -in private.key -pubout -out public.key
+ 2010  ls
+ 2011  cat public.key
+ 2019  touch test_file.txt
+ 2020  openssl rsautl -encrypt -inkey public.key -pubin -in test_file.txt -out encrypted_file.enc
+ 2021  openssl rsautl -decrypt -inkey private.key -in encrypted_file.enc -out decrypted_file.txt

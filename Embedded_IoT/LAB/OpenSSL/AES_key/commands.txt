@@ -1,0 +1,6 @@
+    1  openssl enc -aes-256-cbc -salt -pbkdf2 -in test_file.txt -out test.enc -pass pass:passssword
+    2  ls
+    3  cat test.enc 
+    4  openssl enc -d -aes-256-cbc -pbkdf2 -in test.enc -out decrypted.txt -pass pass:passssword
+    5  ls
+    6  cat decrypted.txt

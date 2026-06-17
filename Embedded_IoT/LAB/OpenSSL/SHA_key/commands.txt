@@ -1,0 +1,6 @@
+   32  mkdir SHA_key
+   35  cd SHA_key/
+   37  openssl dgst -sha256 -sign private.key -out file.sig test_file.txt 
+   38  ls
+   39  cat file.sig 
+   44  openssl dgst -sha256 -verify public.key -signature file.sig test_file.txt 
