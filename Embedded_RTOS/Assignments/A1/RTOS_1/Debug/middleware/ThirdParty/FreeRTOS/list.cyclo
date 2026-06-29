@@ -1,0 +1,5 @@
+/home/desd/DESD_Assignments/Embedded_RTOS/Data_Sharing_RTOS/Setup Files/middleware/ThirdParty/FreeRTOS/list.c:48:6:vListInitialise	1
+/home/desd/DESD_Assignments/Embedded_RTOS/Data_Sharing_RTOS/Setup Files/middleware/ThirdParty/FreeRTOS/list.c:73:6:vListInitialiseItem	1
+/home/desd/DESD_Assignments/Embedded_RTOS/Data_Sharing_RTOS/Setup Files/middleware/ThirdParty/FreeRTOS/list.c:85:6:vListInsertEnd	1
+/home/desd/DESD_Assignments/Embedded_RTOS/Data_Sharing_RTOS/Setup Files/middleware/ThirdParty/FreeRTOS/list.c:115:6:vListInsert	3
+/home/desd/DESD_Assignments/Embedded_RTOS/Data_Sharing_RTOS/Setup Files/middleware/ThirdParty/FreeRTOS/list.c:183:13:uxListRemove	2
